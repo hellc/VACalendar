@@ -43,6 +43,14 @@ public class VACalendarView: UIScrollView {
     public var startDate = Date()
     public var showDaysOut = true
     public var selectionStyle: VASelectionStyle = .single
+    public var currentWeekPeriod: (startDate: Date?, endDate: Date?)? {
+        guard let monthView = getMonthView(with: contentOffset) else { return (nil, nil) }
+        let visibleWeek = monthView.weekViews.first(where: { $0.isVisible() == true })
+        let firstDate = visibleWeek?.week.days.first?.date
+        let lastDate = visibleWeek?.week.days.last?.date
+        
+        return (firstDate, lastDate)
+    }
     
     private var calculatedWeekHeight: CGFloat = 100
     private let calendar: VACalendar
@@ -267,6 +275,11 @@ extension VACalendarView: UIScrollViewDelegate {
         drawVisibleMonth(with: scrollView.contentOffset)
     }
     
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let period = self.currentWeekPeriod
+        monthDelegate?.weekDidChange(period?.0, period?.1)
+    }
+    
 }
 
 extension VACalendarView: VACalendarDelegate {
@@ -294,4 +307,37 @@ extension VACalendarView: VAMonthViewDelegate {
         }
     }
     
+}
+
+extension UIView {
+    func isVisible() -> Bool {
+        let view = self
+        if view.isHidden || view.superview == nil {
+            return false
+        }
+
+        if let rootViewController = UIApplication.shared.keyWindow?.rootViewController,
+            let rootView = rootViewController.view {
+
+            let viewFrame = view.convert(view.bounds, to: rootView)
+
+            let topSafeArea: CGFloat
+            let bottomSafeArea: CGFloat
+
+            if #available(iOS 11.0, *) {
+                topSafeArea = rootView.safeAreaInsets.top
+                bottomSafeArea = rootView.safeAreaInsets.bottom
+            } else {
+                topSafeArea = rootViewController.topLayoutGuide.length
+                bottomSafeArea = rootViewController.bottomLayoutGuide.length
+            }
+
+            return viewFrame.minX >= 0 &&
+                   viewFrame.maxX <= rootView.bounds.width &&
+                   viewFrame.minY >= topSafeArea &&
+                   viewFrame.maxY <= rootView.bounds.height - bottomSafeArea
+        }
+
+        return false
+    }
 }

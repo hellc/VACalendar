@@ -12,16 +12,16 @@ protocol VAWeekViewDelegate: class {
     func dayStateChanged(_ day: VADay, in week: VAWeek)
 }
 
-class VAWeekView: UIView {
+public class VAWeekView: UIView {
     
     weak var dayViewAppearanceDelegate: VADayViewAppearanceDelegate? {
         return (superview as? VAMonthView)?.dayViewAppearanceDelegate
     }
     weak var delegate: VAWeekViewDelegate?
     
+    public let week: VAWeek
     private let showDaysOut: Bool
     private lazy var dayWidth = self.frame.width / 7
-    private let week: VAWeek
     private var dayViews = [VADayView]()
     
     init(week: VAWeek, showDaysOut: Bool) {

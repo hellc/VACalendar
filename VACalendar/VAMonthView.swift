@@ -56,9 +56,10 @@ class VAMonthView: UIView {
 
     let month: VAMonth
     
+    var weekViews = [VAWeekView]()
+    
     private let showDaysOut: Bool
     private var monthLabel: UILabel?
-    private var weekViews = [VAWeekView]()
     private let weekHeight: CGFloat
     private var viewType: VACalendarViewType
     

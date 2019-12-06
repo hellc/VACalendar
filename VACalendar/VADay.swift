@@ -36,7 +36,7 @@ public enum VADaySupplementary: Hashable {
     
 }
 
-class VADay {
+public class VADay {
     
     let date: Date
     var stateChanged: ((VADayState) -> Void)?
@@ -99,11 +99,11 @@ class VADay {
 
 extension VADay: Comparable {
     
-    static func <(lhs: VADay, rhs: VADay) -> Bool {
+    public static func <(lhs: VADay, rhs: VADay) -> Bool {
         return !lhs.dateInDay(rhs.date)
     }
     
-    static func ==(lhs: VADay, rhs: VADay) -> Bool {
+    public static func ==(lhs: VADay, rhs: VADay) -> Bool {
         return lhs.dateInDay(rhs.date)
     }
     

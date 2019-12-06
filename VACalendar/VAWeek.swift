@@ -8,7 +8,7 @@
 
 import Foundation
 
-class VAWeek {
+public class VAWeek {
     
     var days: [VADay]
     let date: Date
